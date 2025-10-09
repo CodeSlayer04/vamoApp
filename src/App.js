@@ -1,32 +1,73 @@
-// src/App.jsx
+// src/App.jsx (Router Central)
 
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-// Importamos la pantalla de perfil que creaste
-import PerfilPage from './pages/PerfilPage'; 
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { StyleSheet } from 'react-native';
 
+// 1. Importar las pantallas (Vistas)
+import PerfilPage from './pages/PerfilPage';
+// Placeholder para pantallas futuras
+import EditarPerfilPage from './pages/EditarPerfilPage';
+import DetallePublicacionPage from './pages/DetallePublicacionPage'; 
+
+// 2. Crear el Navegador Stack (Pilas)
+const Stack = createNativeStackNavigator();
+
+/**
+ * Componente App: Define las rutas principales de navegación.
+ * Este es el "Controlador" de navegación.
+ */
 const App = () => {
-  // Cuando uses React Navigation, aquí irá el componente <NavigationContainer>
-  // Pero por ahora, renderizaremos PerfilPage directamente para probar:
   return (
-    // Usa un contenedor simple para centrar o asegurar el padding superior
-    <View style={styles.container}>
-      <PerfilPage />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Perfil"
+        screenOptions={{
+          headerStyle: styles.headerStyle,
+          headerTintColor: '#fff',
+          headerTitleStyle: styles.headerTitleStyle,
+          headerBackTitleVisible: false,
+        }}
+      >
+        {/* Rutas Principales */}
+        
+        {/* Pantalla 1: Perfil de Usuario */}
+        <Stack.Screen
+          name="Perfil"
+          component={PerfilPage}
+          options={{ title: 'Mi Perfil' }}
+        />
+        
+        {/* Pantalla 2: Edición del Perfil (Para el botón 'Editar Perfil') */}
+        <Stack.Screen
+          name="EditarPerfil"
+          component={EditarPerfilPage} // Los compañeros harán esta página
+          options={{ title: 'Editar Información' }}
+        />
+
+        {/* Pantalla 3: Detalle de la Publicación (Para el click en el post) */}
+        <Stack.Screen
+          name="DetallePublicacion"
+          component={DetallePublicacionPage} // Los compañeros harán esta página
+          options={{ title: 'Publicación' }}
+        />
+        
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // El padding top ayuda a que el contenido no quede debajo de la barra de estado del teléfono
-    paddingTop: 40, 
-    backgroundColor: '#fff',
-  },
+    headerStyle: {
+        backgroundColor: '#4CAF50', // Color primario de Vamo
+    },
+    headerTitleStyle: {
+        fontWeight: 'bold',
+    },
 });
 
 export default App;
 
-// NOTA IMPORTANTE: Si estás usando Expo/React Native, asegúrate de que tu 
-// archivo `index.js` en la raíz del proyecto esté importando este archivo:
-// import App from './src/App';
+// NOTA: Recuerda crear los archivos placeholder en src/pages/ 
+// (Ej. EditarPerfilPage.jsx) para que el código compile, aunque estén vacíos.

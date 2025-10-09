@@ -1,73 +1,68 @@
-// src/pages/PerfilPage.jsx
+// src/pages/PerfilPage.jsx (CÓDIGO ACTUALIZADO PARA NAVEGACIÓN)
 
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  ActivityIndicator,
-} from "react-native";
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; // <-- 1. IMPORTAR HOOK DE NAVEGACIÓN
 
-// Importamos el Controlador
-import { useObtenerPerfilUsuario } from "../hooks/useObtenerPerfilUsuario";
+// Importamos el Controlador y las Vistas
+import { useObtenerPerfilUsuario } from '../hooks/useObtenerPerfilUsuario'; 
+import EncabezadoPerfil from '../components/EncabezadoPerfil';
+import BotonSeguir from '../components/BotonSeguir';
+import ListaPublicacionesUsuario from '../components/ListaPublicacionesUsuario';
 
-// Importamos las Vistas
-import EncabezadoPerfil from "../components/EncabezadoPerfil";
-import BotonSeguir from "../components/BotonSeguir";
-import ListaPublicacionesUsuario from "../components/ListaPublicacionesUsuario";
-
-// ID de tu carné para cargar tu perfil de prueba
-const ID_USUARIO_ACTUAL = "HV220231";
+const ID_PERFIL_ACTUAL = 'HV220231'; 
+const ID_USUARIO_LOGUEADO = 'HV220231'; 
 
 const PerfilPage = () => {
-  // 1. Usar el Custom Hook (Controlador) para obtener el Modelo (datos)
-  const { datosPerfil, estaCargando, error } =
-    useObtenerPerfilUsuario(ID_USUARIO_ACTUAL);
+    
+    // 2. OBTENER EL OBJETO DE NAVEGACIÓN
+    const navigation = useNavigation();
 
-  // 2. Manejo de estados: Carga y Error
-  if (estaCargando) {
+    // 3. DEFINIR LA FUNCIÓN QUE NAVEGA
+    const navegarAEditarPerfil = () => {
+        // Usa el nombre de la ruta que definiste en App.jsx: 'EditarPerfil'
+        navigation.navigate('EditarPerfil');
+        console.log("Navegando a la pantalla de Edición de Perfil.");
+    };
+
+    const { datosPerfil, estaCargando, error } = useObtenerPerfilUsuario(ID_PERFIL_ACTUAL);
+
+    const esPerfilPropio = ID_PERFIL_ACTUAL === ID_USUARIO_LOGUEADO;
+    
+    // ... (manejo de estados, carga y error)
+    if (estaCargando || error || !datosPerfil) {
+        // Retornar manejo de estados de carga/error (omitido por brevedad)
+        return <View style={styles.contenedorCentrado}><ActivityIndicator size="large" color="#4CAF50" /></View>;
+    }
+
+
+    // 4. Pasar la función de navegación a la Vista
     return (
-      <View style={styles.contenedorCentrado}>
-        <ActivityIndicator size="large" color="#4CAF50" />
-        <Text>Cargando perfil...</Text>
-      </View>
+        <ScrollView style={styles.contenedorScroll}>
+            
+            <EncabezadoPerfil 
+                usuario={datosPerfil}
+                // PASAMOS LA FUNCIÓN DE NAVEGACIÓN AL COMPONENTE HIJO
+                alEditar={navegarAEditarPerfil} 
+                esPropio={esPerfilPropio} 
+            />
+            
+            {!esPerfilPropio && (
+                <BotonSeguir 
+                    esSiguiendo={datosPerfil.isFollowing} 
+                />
+            )}
+
+            <ListaPublicacionesUsuario publicaciones={datosPerfil.publicaciones} />
+            
+        </ScrollView>
     );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.contenedorCentrado}>
-        <Text style={styles.textoError}>
-          Error al cargar el perfil: {error}
-        </Text>
-      </View>
-    );
-  }
-
-  // 3. Renderizado de la Vista al tener los datos
-  return (
-    <ScrollView style={styles.contenedorScroll}>
-      <EncabezadoPerfil
-        usuario={datosPerfil} // El Modelo
-        alEditar={() => console.log("TODO: Navegar a Edición de Perfil")}
-      />
-
-      <BotonSeguir esSiguiendo={datosPerfil.isFollowing} />
-
-      <ListaPublicacionesUsuario publicaciones={datosPerfil.publicaciones} />
-    </ScrollView>
-  );
 };
 
 const styles = StyleSheet.create({
-  contenedorScroll: { flex: 1, backgroundColor: "#f0f0f0" },
-  contenedorCentrado: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  textoError: { color: "red", fontSize: 16 },
+    contenedorScroll: { flex: 1, backgroundColor: '#f0f0f0' },
+    contenedorCentrado: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+    textoError: { color: 'red', fontSize: 16 }
 });
 
 export default PerfilPage;
