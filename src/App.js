@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; // <-- NUEVO
-
+import { Ionicons } from "@expo/vector-icons";
 // Importar Pantallas
 import PerfilPage from "./pages/PerfilPage";
 import EditarPerfilPage from "./pages/EditarPerfilPage";
@@ -73,11 +73,11 @@ const App = () => {
           // texto con iconos 
           tabBarIcon: ({ color, size }) => {
             let iconName = "";
-            if (route.name === "Inicio") iconName = "🏠";
-            else if (route.name === "Explorar") iconName = "🔍";
-            else if (route.name === "Crear") iconName = "➕";
-            else if (route.name === "Notificaciones") iconName = "🔔";
-            else if (route.name === "Mi Cuenta") iconName = "👤";
+            if (route.name === "Inicio") iconName = <Ionicons name="home-outline" size={24} color="black" />
+            else if (route.name === "Explorar") iconName = <Ionicons name="search-outline" size={24} color="black" />
+            else if (route.name === "Crear") iconName= <Ionicons name="add-circle-outline" size={24} color="black" />
+            else if (route.name === "Notificaciones") iconName = <Ionicons name="notifications-outline" size={24} color="black" />
+            else if (route.name === "Mi Cuenta") iconName = <Ionicons name="person-outline" size={24} color="black" />;
             return <Text style={{ color, fontSize: size }}>{iconName}</Text>;
           },
         })}

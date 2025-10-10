@@ -4,7 +4,7 @@ import React from 'react';
 // Asegúrate de que este import sea correcto:
 import { useNavigation } from '@react-navigation/native'; // <-- CLAVE
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'; 
-
+import { Ionicons } from '@expo/vector-icons';
 
 const TarjetaPublicacion = ({ publicacion }) => {
     
@@ -37,8 +37,8 @@ const TarjetaPublicacion = ({ publicacion }) => {
             <View style={styles.infoInferior}>
                 <Text style={styles.textoPublicacion}>{publicacion.texto}</Text>
                 <View style={styles.contenedorEstadisticas}>
-                    <Text style={styles.estadistica}>❤️ {publicacion.likes}</Text>
-                    <Text style={styles.estadistica}>💬 {publicacion.comentarios}</Text>
+                    <Ionicons name="heart-outline" size={24} color="black" />
+                   <Ionicons name="chatbox-ellipses-outline" size={24} color="black" />
                 </View>
             </View>
         </TouchableOpacity>
