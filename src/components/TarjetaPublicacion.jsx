@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -18,37 +17,30 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 const TarjetaPublicacion = ({ publicacion }) => {
-
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(publicacion.likes || 0);
-
 
   const [modalVisible, setModalVisible] = useState(false);
   const [comentarios, setComentarios] = useState(publicacion.comentarios || []);
   const [nuevoComentario, setNuevoComentario] = useState("");
 
- 
   const DarLike = () => {
     setIsLiked(!isLiked);
     setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
   };
 
-
   const toggleComentarios = () => {
     setModalVisible(!modalVisible);
   };
-
 
   const agregarComentario = () => {
     const texto = nuevoComentario.trim();
     if (texto === "") return;
 
-  
     const nuevo = { id: Date.now().toString(), texto };
     setComentarios([...comentarios, nuevo]);
     setNuevoComentario("");
   };
-
 
   const navigation = useNavigation();
   const navegarADetalle = () => {
@@ -60,7 +52,6 @@ const TarjetaPublicacion = ({ publicacion }) => {
 
   return (
     <>
-
       <TouchableOpacity style={styles.contenedor} onPress={navegarADetalle}>
         <Image
           source={{ uri: publicacion.imagenUrl }}
@@ -71,7 +62,6 @@ const TarjetaPublicacion = ({ publicacion }) => {
           <Text style={styles.textoPublicacion}>{publicacion.texto}</Text>
 
           <View style={styles.contenedorEstadisticas}>
-  
             <TouchableOpacity onPress={DarLike} style={styles.likeContainer}>
               <Ionicons
                 name={isLiked ? "heart" : "heart-outline"}
@@ -81,7 +71,6 @@ const TarjetaPublicacion = ({ publicacion }) => {
               <Text style={styles.contadorLikes}>{likeCount}</Text>
             </TouchableOpacity>
 
-  
             <TouchableOpacity
               onPress={toggleComentarios}
               style={{ marginLeft: 15 }}
@@ -96,7 +85,6 @@ const TarjetaPublicacion = ({ publicacion }) => {
         </View>
       </TouchableOpacity>
 
- 
       <Modal
         animationType="slide"
         transparent={true}
@@ -105,12 +93,10 @@ const TarjetaPublicacion = ({ publicacion }) => {
       >
         <TouchableWithoutFeedback onPress={toggleComentarios}>
           <View style={styles.modalOverlay}>
-     
             <TouchableWithoutFeedback>
               <View style={styles.modalContainer}>
                 <Text style={styles.modalTitulo}>Comentarios</Text>
 
-             
                 <FlatList
                   data={comentarios}
                   keyExtractor={(item) => item.id}
@@ -126,7 +112,6 @@ const TarjetaPublicacion = ({ publicacion }) => {
                   }
                 />
 
-             
                 <KeyboardAvoidingView
                   behavior={Platform.OS === "ios" ? "padding" : "height"}
                   style={styles.comentarioInputContainer}
@@ -137,10 +122,11 @@ const TarjetaPublicacion = ({ publicacion }) => {
                     value={nuevoComentario}
                     onChangeText={setNuevoComentario}
                   />
-                  <Button title="Enviar" onPress={agregarComentario} />
+                  <TouchableOpacity title="Enviar" onPress={agregarComentario}>
+                    <Ionicons name="send-sharp" size={24} color="black" />
+                  </TouchableOpacity>
                 </KeyboardAvoidingView>
 
-              
                 <TouchableOpacity
                   onPress={toggleComentarios}
                   style={styles.btnCerrar}
@@ -245,6 +231,3 @@ const styles = StyleSheet.create({
 });
 
 export default TarjetaPublicacion;
-
-
-
