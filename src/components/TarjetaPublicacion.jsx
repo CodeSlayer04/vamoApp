@@ -76,7 +76,7 @@ const TarjetaPublicacion = ({ publicacion }) => {
               <Ionicons
                 name={isLiked ? "heart" : "heart-outline"}
                 size={24}
-                color={isLiked ? "red" : "black"}
+                color={isLiked ? "black" : "black"}
               />
               <Text style={styles.contadorLikes}>{likeCount}</Text>
             </TouchableOpacity>
