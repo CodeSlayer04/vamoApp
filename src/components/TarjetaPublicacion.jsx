@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-  Button,
   KeyboardAvoidingView,
   Platform,
   FlatList,
@@ -17,11 +16,17 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 const TarjetaPublicacion = ({ publicacion }) => {
+  const navigation = useNavigation();
+
+  // Evita errores si comentarios no es un array
+  const comentariosIniciales = Array.isArray(publicacion.comentarios)
+    ? publicacion.comentarios
+    : [];
+
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(publicacion.likes || 0);
-
   const [modalVisible, setModalVisible] = useState(false);
-  const [comentarios, setComentarios] = useState(publicacion.comentarios || []);
+  const [comentarios, setComentarios] = useState(comentariosIniciales);
   const [nuevoComentario, setNuevoComentario] = useState("");
 
   const DarLike = () => {
@@ -38,11 +43,10 @@ const TarjetaPublicacion = ({ publicacion }) => {
     if (texto === "") return;
 
     const nuevo = { id: Date.now().toString(), texto };
-    setComentarios([...comentarios, nuevo]);
+    setComentarios((prevComentarios) => [...prevComentarios, nuevo]);
     setNuevoComentario("");
   };
 
-  const navigation = useNavigation();
   const navegarADetalle = () => {
     navigation.navigate("DetallePublicacion", {
       idPublicacion: publicacion.id,
@@ -85,6 +89,7 @@ const TarjetaPublicacion = ({ publicacion }) => {
         </View>
       </TouchableOpacity>
 
+      {/* Modal de comentarios */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -122,7 +127,7 @@ const TarjetaPublicacion = ({ publicacion }) => {
                     value={nuevoComentario}
                     onChangeText={setNuevoComentario}
                   />
-                  <TouchableOpacity title="Enviar" onPress={agregarComentario}>
+                  <TouchableOpacity onPress={agregarComentario}>
                     <Ionicons name="send-sharp" size={24} color="black" />
                   </TouchableOpacity>
                 </KeyboardAvoidingView>
