@@ -6,14 +6,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-// ✅ Importaciones correctas (sin ./src/)
-import PerfilPage from "./pages/PerfilPage";
-import EditarPerfilPage from "./pages/EditarPerfilPage";
-import DetallePublicacionPage from "./pages/DetallePublicacionPage";
-import CercaDeMiPage from "./pages/CercaDeMiPage";
-import MapaCategoriaPage from "./pages/MapaCategoriaPage";
+// Rutas relativas CORRECTAS (desde src/App.js -> ./pages/...)
+import PerfilPage from "./PerfilPage";
+import EditarPerfilPage from "./EditarPerfilPage";
+import DetallePublicacionPage from "./DetallePublicacionPage";
+import CercaDeMiPage from "./CercaDeMiPage";
+import MapaCategoriaPage from "./MapaCategoriaPage.jsx";
 
-// Placeholders (para evitar errores si no tienes estas pantallas todavía)
+// Placeholders inline (evitan errores si no tienes archivos para estas pantallas)
 const HomePage = () => (
   <View style={styles.center}>
     <Text>Inicio</Text>
@@ -51,7 +51,7 @@ const ExplorarStack = () => (
   </ExplorarStackNav.Navigator>
 );
 
-// Stack anidado para Perfil
+// Stack para Perfil (ya lo tenías)
 const PerfilStack = () => (
   <Stack.Navigator initialRouteName="Perfil" screenOptions={styles.stackOptions}>
     <Stack.Screen name="Perfil" component={PerfilPage} options={{ title: "Mi Perfil" }} />
@@ -60,7 +60,7 @@ const PerfilStack = () => (
   </Stack.Navigator>
 );
 
-// Tab principal
+// Tab Navigator principal
 export default function App() {
   return (
     <NavigationContainer>
@@ -71,27 +71,13 @@ export default function App() {
           tabBarActiveTintColor: "#4CAF50",
           tabBarInactiveTintColor: "gray",
           tabBarIcon: ({ color, size }) => {
-            let iconName;
-            switch (route.name) {
-              case "Inicio":
-                iconName = "home-outline";
-                break;
-              case "Explorar":
-                iconName = "compass-outline";
-                break;
-              case "Crear":
-                iconName = "add-circle-outline";
-                break;
-              case "Notificaciones":
-                iconName = "notifications-outline";
-                break;
-              case "Mi Cuenta":
-                iconName = "person-outline";
-                break;
-              default:
-                iconName = "ellipse";
-            }
-            return <Ionicons name={iconName} size={size} color={color} />;
+            let iconName = "ellipse";
+            if (route.name === "Inicio") iconName = "home-outline";
+            else if (route.name === "Explorar") iconName = "compass-outline";
+            else if (route.name === "Crear") iconName = "add-circle-outline";
+            else if (route.name === "Notificaciones") iconName = "notifications-outline";
+            else if (route.name === "Mi Cuenta") iconName = "person-outline";
+            return <Ionicons name={iconName} size={24} color={color} />;
           },
         })}
       >
