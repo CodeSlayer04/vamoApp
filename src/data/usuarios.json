@@ -1,0 +1,35 @@
+
+{
+  "HV220231": {
+    "id": "HV220231",
+    "nombre": "Wilfredo Hernandez Vidal",
+    "fotoUrl": "https://sticker-collection.com/stickers/plain/MrIncredibleSticks/512/225d7252-2bfb-4a3c-aa4b-880f338968f4file_2739802.webp", 
+    "biografia": "Arquitecto de Software para Vamo App. Me gusta explorar la costa de El Salvador.",
+    "lugaresVisitados": 147,
+    "seguidores": 350,
+    "seguidos": 120,
+    "isFollowing": false,
+    "publicaciones": [
+      {
+        "id": "p001",
+        "imagenUrl": "https://toursinelsalvador.com/es/img/20180804_092248_Pano23.jpg", 
+        "texto": "Recorrido por Izalco, un lugar lleno de historia.",
+        "likes": 25,
+        "comentarios": 5
+      },
+      {
+        "id": "p002",
+        "imagenUrl": "https://elsalvador.travel/system/wp-content/uploads/2022/01/Cerro-Verde-Drone-CAPRES-4.jpg", 
+        "texto": "Día de caminata en el Cerro Verde. ¡Vistas espectaculares!",
+        "likes": 42,
+        "comentarios": 10
+      },{
+        "id": "p003",
+        "imagenUrl": "https://a0.muscache.com/pictures/miso/Hosting-34417634/original/baa1a7c5-7fe2-41db-9fd5-15902305fc34.jpeg", 
+        "texto": "Dia de playa en la costa del sol!",
+        "likes": 42,
+        "comentarios": 10
+      }
+    ]
+  }
+}
