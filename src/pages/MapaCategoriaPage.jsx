@@ -4,8 +4,7 @@ import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { lugares as lugaresLocales } from "../data/lugares";
 
-// ⚡️ PON TU API KEY AQUÍ si quieres datos reales
-const GOOGLE_API_KEY = ""; // Ej: "AIzaSyD-XXXXXXXXXXXXXXX"
+const GOOGLE_API_KEY = "";
 
 export default function MapaCategoriaPage({ route }) {
   const { categoria } = route.params || { categoria: "Sin categoría" };
@@ -18,13 +17,20 @@ export default function MapaCategoriaPage({ route }) {
   // Función para mapear categorías a tipos de Google Places
   const categoriaToGoogleType = (cat) => {
     switch (cat) {
-      case "Sol y playa": return "beach";
-      case "Senderismo": return "park";
-      case "Montañas": return "point_of_interest";
-      case "Cultura": return "museum";
-      case "Gastronomía": return "restaurant";
-      case "Rural": return "tourist_attraction";
-      default: return "point_of_interest";
+      case "Sol y playa":
+        return "beach";
+      case "Senderismo":
+        return "park";
+      case "Montañas":
+        return "point_of_interest";
+      case "Cultura":
+        return "museum";
+      case "Gastronomía":
+        return "restaurant";
+      case "Rural":
+        return "tourist_attraction";
+      default:
+        return "point_of_interest";
     }
   };
 
@@ -45,20 +51,22 @@ export default function MapaCategoriaPage({ route }) {
         setLocation(userLocation.coords);
 
         if (GOOGLE_API_KEY) {
-          // 🚀 Usar Google Places API
           const tipo = categoriaToGoogleType(categoria);
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${userLocation.coords.latitude},${userLocation.coords.longitude}&radius=10000&type=${tipo}&key=${GOOGLE_API_KEY}`
           );
           const data = await response.json();
-          setLugares(data.results.map((l) => ({
-            nombre: l.name,
-            lat: l.geometry.location.lat,
-            lng: l.geometry.location.lng,
-          })));
+          setLugares(
+            data.results.map((l) => ({
+              nombre: l.name,
+              lat: l.geometry.location.lat,
+              lng: l.geometry.location.lng,
+            }))
+          );
         } else {
-          // 🏡 Usar datos locales
-          const filtrados = lugaresLocales.filter(l => l.categoria === categoria);
+          const filtrados = lugaresLocales.filter(
+            (l) => l.categoria === categoria
+          );
           setLugares(filtrados);
         }
       } catch (error) {
@@ -103,11 +111,7 @@ export default function MapaCategoriaPage({ route }) {
 
   return (
     <View style={styles.container}>
-      <MapView
-        ref={mapRef}
-        style={styles.map}
-        showsUserLocation={true}
-      >
+      <MapView ref={mapRef} style={styles.map} showsUserLocation={true}>
         {lugares.map((lugar, index) => (
           <Marker
             key={index}

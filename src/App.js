@@ -7,21 +7,37 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
 // Importaciones de pantallas
+import InicioPage from "./pages/InicioPage";
 import PerfilPage from "./pages/PerfilPage";
 import EditarPerfilPage from "./pages/EditarPerfilPage";
 import DetallePublicacionPage from "./pages/DetallePublicacionPage";
 import CercaDeMiPage from "./pages/CercaDeMiPage";
 import MapaCategoriaPage from "./pages/MapaCategoriaPage";
+import CrearPage from "./pages/CrearPage";
 
 // Placeholders
 const HomePage = () => (
-  <View style={styles.center}><Text>Inicio</Text></View>
+  <Stack.Navigator screenOptions={styles.stackOptions}>
+    <Stack.Screen
+      name="InicioScreen"
+      component={InicioPage}
+      options={{ title: "Inicio" }}
+    />
+  </Stack.Navigator>
 );
-const CrearPage = () => (
-  <View style={styles.center}><Text>Crear Post</Text></View>
+const Crear = () => (
+  <Stack.Navigator screenOptions={styles.stackOptions}>
+    <Stack.Screen
+      name="CrearScreen"
+      component={CrearPage}
+      options={{ title: "Crear publicación" }}
+    />
+  </Stack.Navigator>
 );
 const NotificacionesPage = () => (
-  <View style={styles.center}><Text>Notificaciones</Text></View>
+  <View style={styles.center}>
+    <Text>Notificaciones</Text>
+  </View>
 );
 
 // Navigators
@@ -47,10 +63,25 @@ const ExplorarStack = () => (
 
 // Stack anidado para Perfil
 const PerfilStack = () => (
-  <Stack.Navigator initialRouteName="Perfil" screenOptions={styles.stackOptions}>
-    <Stack.Screen name="Perfil" component={PerfilPage} options={{ title: "Mi Perfil" }} />
-    <Stack.Screen name="EditarPerfil" component={EditarPerfilPage} options={{ title: "Editar Información" }} />
-    <Stack.Screen name="DetallePublicacion" component={DetallePublicacionPage} options={{ title: "Publicación" }} />
+  <Stack.Navigator
+    initialRouteName="Perfil"
+    screenOptions={styles.stackOptions}
+  >
+    <Stack.Screen
+      name="Perfil"
+      component={PerfilPage}
+      options={{ title: "Mi Perfil" }}
+    />
+    <Stack.Screen
+      name="EditarPerfil"
+      component={EditarPerfilPage}
+      options={{ title: "Editar Información" }}
+    />
+    <Stack.Screen
+      name="DetallePublicacion"
+      component={DetallePublicacionPage}
+      options={{ title: "Publicación" }}
+    />
   </Stack.Navigator>
 );
 
@@ -91,9 +122,13 @@ export default function App() {
       >
         <Tab.Screen name="Inicio" component={HomePage} />
         <Tab.Screen name="Explorar" component={ExplorarStack} />
-        <Tab.Screen name="Crear" component={CrearPage} />
+        <Tab.Screen name="Crear" component={Crear} />
         <Tab.Screen name="Notificaciones" component={NotificacionesPage} />
-        <Tab.Screen name="Mi Cuenta" component={PerfilStack} options={{ title: "Perfil" }} />
+        <Tab.Screen
+          name="Mi Cuenta"
+          component={PerfilStack}
+          options={{ title: "Perfil" }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );

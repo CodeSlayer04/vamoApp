@@ -20,13 +20,6 @@ const ID_PERFIL_ACTUAL = "HV220231";
 const ID_USUARIO_LOGUEADO = "HV220231";
 
 const PerfilPage = () => {
-  const navigation = useNavigation();
-
-  const navegarAEditarPerfil = () => {
-    navigation.navigate("EditarPerfil");
-    console.log("Navegando a la pantalla de Edición de Perfil.");
-  };
-
   const { datosPerfil, estaCargando, error } =
     useObtenerPerfilUsuario(ID_PERFIL_ACTUAL);
 
@@ -45,14 +38,6 @@ const PerfilPage = () => {
   // 4. Pasar la función de navegación a la Vista
   return (
     <ScrollView style={styles.contenedorScroll}>
-      <EncabezadoPerfil
-        usuario={datosPerfil}
-        alEditar={navegarAEditarPerfil}
-        esPropio={esPerfilPropio}
-      />
-
-      {!esPerfilPropio && <BotonSeguir esSiguiendo={datosPerfil.isFollowing} />}
-
       <ListaPublicacionesUsuario publicaciones={datosPerfil.publicaciones} />
     </ScrollView>
   );

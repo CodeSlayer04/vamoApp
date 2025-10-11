@@ -18,7 +18,7 @@ import { Ionicons } from "@expo/vector-icons";
 const TarjetaPublicacion = ({ publicacion }) => {
   const navigation = useNavigation();
 
-  // Evita errores si comentarios no es un array
+  //si comentarios no es un array
   const comentariosIniciales = Array.isArray(publicacion.comentarios)
     ? publicacion.comentarios
     : [];
