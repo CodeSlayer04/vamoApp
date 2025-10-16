@@ -31,5 +31,37 @@
         "comentarios": 10
       }
     ]
+  },
+    "EU220488": {
+    "id": "EU220488",
+    "nombre": "Ricardo Escobar",
+    "fotoUrl": "https://sticker-collection.com/stickers/plain/MrIncredibleSticks/512/225d7252-2bfb-4a3c-aa4b-880f338968f4file_2739802.webp", 
+    "biografia": "Viajero principiante, en busca de nuevos sitios",
+    "lugaresVisitados": 10,
+    "seguidores": 100,
+    "seguidos": 130,
+    "isFollowing": false,
+    "publicaciones": [
+      {
+        "id": "p004",
+        "imagenUrl": "https://i.pinimg.com/736x/28/b3/32/28b332878c753b307381cc307c31cfb2.jpg", 
+        "texto": "hermoso lugar para despejarse la mente",
+        "likes": 25,
+        "comentarios": 5
+      },
+      {
+        "id": "p005",
+        "imagenUrl": "https://elsalvadorviajar.com/wp-content/uploads/2021/09/PLAYA-SAN-DIEGO-Playas-de-El-Salvador.jpg", 
+        "texto": "Día de playita",
+        "likes": 40,
+        "comentarios": 10
+      },{
+        "id": "p006",
+        "imagenUrl": "https://elsalvadorviajar.com/wp-content/uploads/2022/04/RUTA-DE-LAS-7-CASCADAS-Rutas-de-El-Salvador.jpg", 
+        "texto": "ya tocaba bañito",
+        "likes": 20,
+        "comentarios": 10
+      }
+    ]
   }
 }
