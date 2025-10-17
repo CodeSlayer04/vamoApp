@@ -16,7 +16,7 @@ const Register = ({ navigation }) => {
     }
 
     try {
-      // 1️⃣ Crear usuario en Firebase Authentication
+      
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
@@ -34,10 +34,10 @@ const Register = ({ navigation }) => {
         privado: false,
       });
 
-      // 3️⃣ Mostrar confirmación
+     
       Alert.alert("Éxito", "Usuario registrado correctamente");
 
-      // Limpiar campos y navegar al login
+     
       setEmail("");
       setPassword("");
       setNombre("");
