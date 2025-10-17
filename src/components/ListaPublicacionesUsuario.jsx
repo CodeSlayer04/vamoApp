@@ -1,41 +1,85 @@
-// src/components/ListaPublicacionesUsuario.jsx
 
 import React from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
-import TarjetaPublicacion from "./TarjetaPublicacion";
+import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import app from "../config/firebaseconfig";
+import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
-/**
- * Componente que renderiza la lista de publicaciones de un usuario.
- * @param {Array<object>} publicaciones - Array de objetos de publicación.
- */
 const ListaPublicacionesUsuario = ({ publicaciones }) => {
-  
-  if (!publicaciones || publicaciones.length === 0) {
-    return (
-      <View style={styles.contenedor}>
-        <Text style={styles.textoVacio}>Este usuario aún no tiene publicaciones.</Text>
-      </View>
-    );
-  }
+  const navigation = useNavigation();
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const usuarioActual = auth.currentUser;
+
+  const toggleLike = async (pub) => {
+    if (!usuarioActual) return;
+
+    const yaLeDioLike = pub.UsuariosLikes?.includes(usuarioActual.uid);
+    const postRef = doc(db, "publicaciones", pub.id);
+
+    await updateDoc(postRef, {
+      Likes: yaLeDioLike ? pub.Likes - 1 : pub.Likes + 1,
+      UsuariosLikes: yaLeDioLike
+        ? arrayRemove(usuarioActual.uid)
+        : arrayUnion(usuarioActual.uid),
+    });
+  };
 
   return (
-    <View style={styles.contenedor}>
-      <FlatList
-        data={publicaciones}
-        keyExtractor={(item) => item.id.toString()} 
-        renderItem={({ item }) => <TarjetaPublicacion publicacion={item} />}
-        // Desactivado para evitar conflictos si se anida dentro de un ScrollView
-        scrollEnabled={false} 
-        contentContainerStyle={styles.listaContenedor}
-      />
+    <View style={styles.lista}>
+      {publicaciones.map((pub) => {
+        const yaLeDioLike = usuarioActual && pub.UsuariosLikes?.includes(usuarioActual.uid);
+
+        return (
+          <TouchableOpacity
+            key={pub.id}
+            style={styles.card}
+            onPress={() => navigation.navigate("DetallePublicacion", { id: pub.id })}
+          >
+            <Image source={{ uri: pub.ImageUrl }} style={styles.imagen} />
+            <Text style={styles.detalles}>{pub.Detalles}</Text>
+
+            <View style={styles.likeContainer}>
+              <TouchableOpacity onPress={() => toggleLike(pub)}>
+                <FontAwesome
+                  name={yaLeDioLike ? "heart" : "heart-o"}
+                  size={24}
+                  color={yaLeDioLike ? "#ff4081" : "#888"}
+                />
+              </TouchableOpacity>
+              <Text style={styles.likes}>{pub.Likes || 0}</Text>
+            </View>
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  contenedor: { paddingHorizontal: 10 },
-  listaContenedor: { paddingBottom: 20 },
-  textoVacio: { textAlign: 'center', marginTop: 20, fontSize: 14, color: '#888' }
+  lista: { padding: 10 },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    marginBottom: 15,
+    padding: 10,
+    elevation: 2,
+  },
+  imagen: { width: "100%", height: 200, borderRadius: 10 },
+  detalles: { marginTop: 10, fontSize: 16, color: "#333" },
+  likeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  likes: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: "#555",
+  },
 });
 
 export default ListaPublicacionesUsuario;

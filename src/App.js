@@ -93,18 +93,22 @@ const PerfilStack = () => (
       component={EditarPerfilPage}
       options={{ title: "Editar Información" }}
     />
+    
     <Stack.Screen
-      name="DetallePublicacion"
+      name="DetallePublicacionPage"
       component={DetallePublicacionPage}
       options={{ title: "Publicación" }}
     />
 
+<<<<<<< HEAD
     {/* 🛑 RUTA REGISTRADA: Permite ir al perfil de otro usuario desde el propio perfil */}
     <Stack.Screen
         name="PerfilOtroUsuarioPage"
         component={PerfilOtroUsuarioPage}
         options={{ title: "Perfil de Usuario" }}
     />
+=======
+>>>>>>> bb3194ba78bc22bf6c8f1c4393cdd8f57726993b
   </Stack.Navigator>
 );
 
@@ -154,13 +158,20 @@ const MainTabs = () => (
 );
 
 // ✅ Stack de autenticación
+
 const AuthStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Login" component={Login} />
     <Stack.Screen name="Register" component={Register} />
     <Stack.Screen name="MainTabs" component={MainTabs} />
+    <Stack.Screen
+      name="DetallePublicacion"
+      component={DetallePublicacionPage}
+      options={{ headerShown: true, title: "Publicación" }}
+    />
   </Stack.Navigator>
 );
+
 
 // App principal
 export default function App() {

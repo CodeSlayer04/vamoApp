@@ -19,8 +19,14 @@ import {
 } from "firebase/firestore";
 
 //Usamos las mismas constantes de Cloudinary que en CrearPage.jsx
+<<<<<<< HEAD
 const CLOUDINARY_CLOUD_NAME = "dtfmdf4iu";
 const CLOUDINARY_UPLOAD_PRESET = "Vamoapp_upload";
+=======
+const CLOUDINARY_CLOUD_NAME = 'dtfmdf4iu'; 
+const CLOUDINARY_UPLOAD_PRESET = 'Vamoapp_profiles'; 
+
+>>>>>>> bb3194ba78bc22bf6c8f1c4393cdd8f57726993b
 
 /**
  * Obtiene los datos de perfil y las publicaciones de un usuario específico desde Firestore.

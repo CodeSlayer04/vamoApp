@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // src/pages/InicioPage.jsx
 
 import React from 'react';
@@ -10,6 +11,26 @@ import SugerenciasUsuarios from '../components/SugerenciasUsuarios';
 
 const InicioPage = () => {
 
+=======
+
+// src/pages/InicioPage.jsx
+
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
+import { useObtenerTodasLasPublicaciones } from "../hooks/useObtenerTodasLasPublicaciones";
+import ListaPublicacionesUsuario from "../components/ListaPublicacionesUsuario";
+
+const InicioPage = () => {
+  const { publicaciones, cargando, error } = useObtenerTodasLasPublicaciones();
+
+  if (cargando) {
+>>>>>>> bb3194ba78bc22bf6c8f1c4393cdd8f57726993b
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView style={styles.container}>
@@ -27,9 +48,25 @@ const InicioPage = () => {
                    {/* Espacio para tus publicaciones */}
                 </View>
 
+<<<<<<< HEAD
             </ScrollView>
         </SafeAreaView>
     );
+=======
+  if (error) {
+    return (
+      <View style={styles.contenedorCentrado}>
+        <Text style={styles.textoError}>Error al cargar el feed</Text>
+      </View>
+    );
+  }
+
+  return (
+    <ScrollView style={styles.contenedorScroll}>
+      <ListaPublicacionesUsuario publicaciones={publicaciones} />
+    </ScrollView>
+  );
+>>>>>>> bb3194ba78bc22bf6c8f1c4393cdd8f57726993b
 };
 
 const styles = StyleSheet.create({
@@ -48,4 +85,8 @@ const styles = StyleSheet.create({
     // Añade el resto de tus estilos aquí
 });
 
+<<<<<<< HEAD
 export default InicioPage;
+=======
+export default InicioPage;
+>>>>>>> bb3194ba78bc22bf6c8f1c4393cdd8f57726993b
