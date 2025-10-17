@@ -32,7 +32,7 @@ export default function CercaDeMiPage() {
             key={cat.id}
             style={styles.card}
             onPress={() =>
-              navigation.navigate("MapaCategoria", { categoria: cat.nombre })
+              navigation.navigate("CategoriaHome", { categoria: cat.nombre })
             }
           >
             <Image source={cat.imagen} style={styles.image} />

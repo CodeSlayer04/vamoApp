@@ -15,6 +15,8 @@ import EditarPerfilPage from "./pages/EditarPerfilPage";
 import DetallePublicacionPage from "./pages/DetallePublicacionPage";
 import CercaDeMiPage from "./pages/CercaDeMiPage";
 import MapaCategoriaPage from "./pages/MapaCategoriaPage";
+import CategoriaHomePage from "./pages/CategoriaHomePage";
+import InformacionCategoriaPage from "./pages/InformacionCategoriaPage";
 import CrearPage from "./pages/CrearPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -38,6 +40,16 @@ const ExplorarStack = () => (
       name="CercaDeMi"
       component={CercaDeMiPage}
       options={{ title: "Explorar" }}
+    />
+    <ExplorarStackNav.Screen
+      name="CategoriaHome"
+      component={CategoriaHomePage}
+      options={({ route }) => ({ title: route.params?.categoria || "Categoría" })}
+    />
+    <ExplorarStackNav.Screen
+      name="InformacionCategoria"
+      component={InformacionCategoriaPage}
+      options={({ route }) => ({ title: route.params?.categoria || "Información" })}
     />
     <ExplorarStackNav.Screen
       name="MapaCategoria"
