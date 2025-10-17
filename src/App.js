@@ -100,15 +100,12 @@ const PerfilStack = () => (
       options={{ title: "Publicación" }}
     />
 
-<<<<<<< HEAD
     {/* 🛑 RUTA REGISTRADA: Permite ir al perfil de otro usuario desde el propio perfil */}
     <Stack.Screen
         name="PerfilOtroUsuarioPage"
         component={PerfilOtroUsuarioPage}
         options={{ title: "Perfil de Usuario" }}
     />
-=======
->>>>>>> bb3194ba78bc22bf6c8f1c4393cdd8f57726993b
   </Stack.Navigator>
 );
 
