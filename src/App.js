@@ -20,6 +20,7 @@ import InformacionCategoriaPage from "./pages/InformacionCategoriaPage";
 import CrearPage from "./pages/CrearPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import PerfilOtroUsuarioPage from "./pages/PerfilOtroUsuarioPage"; 
 
 // Placeholders
 const NotificacionesPage = () => (
@@ -32,6 +33,23 @@ const NotificacionesPage = () => (
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const ExplorarStackNav = createNativeStackNavigator();
+const HomeStackNav = createNativeStackNavigator(); // 
+// Envuelve InicioPage para permitir la navegación
+const HomeStack = () => (
+    <HomeStackNav.Navigator screenOptions={styles.stackOptions}>
+        <HomeStackNav.Screen
+            name="InicioTab" // Nombre interno del tab
+            component={InicioPage}
+            options={{ title: "Inicio" }}
+        />
+        {/*Permite ir al perfil de otro usuario desde el feed */}
+        <HomeStackNav.Screen
+            name="PerfilOtroUsuarioPage"
+            component={PerfilOtroUsuarioPage}
+            options={{ title: "Perfil de Usuario" }}
+        />
+    </HomeStackNav.Navigator>
+);
 
 // Stack anidado para Explorar
 const ExplorarStack = () => (
@@ -80,13 +98,20 @@ const PerfilStack = () => (
       component={DetallePublicacionPage}
       options={{ title: "Publicación" }}
     />
+
+    {/* 🛑 RUTA REGISTRADA: Permite ir al perfil de otro usuario desde el propio perfil */}
+    <Stack.Screen
+        name="PerfilOtroUsuarioPage"
+        component={PerfilOtroUsuarioPage}
+        options={{ title: "Perfil de Usuario" }}
+    />
   </Stack.Navigator>
 );
 
 // Tab principal
 const MainTabs = () => (
   <Tab.Navigator
-    initialRouteName="Inicio"
+    initialRouteName="InicioStack"
     screenOptions={({ route }) => ({
       headerShown: false,
       tabBarActiveTintColor: "#4CAF50",
@@ -94,7 +119,7 @@ const MainTabs = () => (
       tabBarIcon: ({ color, size }) => {
         let iconName;
         switch (route.name) {
-          case "Inicio":
+          case "InicioStack":
             iconName = "home-outline";
             break;
           case "Explorar":
@@ -116,7 +141,7 @@ const MainTabs = () => (
       },
     })}
   >
-    <Tab.Screen name="Inicio" component={InicioPage} />
+    <Tab.Screen name="InicioStack" component={HomeStack} options={{ title: "Inicio" }} />
     <Tab.Screen name="Explorar" component={ExplorarStack} />
     <Tab.Screen name="Crear" component={CrearPage} />
     <Tab.Screen name="Notificaciones" component={NotificacionesPage} />
