@@ -15,7 +15,7 @@ import {
 
 //Usamos las mismas constantes de Cloudinary que en CrearPage.jsx
 const CLOUDINARY_CLOUD_NAME = 'dtfmdf4iu'; 
-const CLOUDINARY_UPLOAD_PRESET = 'Vamoapp_upload'; 
+const CLOUDINARY_UPLOAD_PRESET = 'Vamoapp_profiles'; 
 
 
 /**
