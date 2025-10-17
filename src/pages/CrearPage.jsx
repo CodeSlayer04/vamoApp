@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -19,22 +20,23 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
-const CLOUDINARY_CLOUD_NAME = 'dtfmdf4iu'; 
-const CLOUDINARY_UPLOAD_PRESET = 'Vamoapp_upload'; 
+const CLOUDINARY_CLOUD_NAME = 'dtfmdf4iu';
+const CLOUDINARY_UPLOAD_PRESET = 'Vamoapp_upload';
 
-export default function CrearPage() {
+function CrearPage() {
   const [image, setImage] = useState(null);
   const [details, setDetails] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
-   
-      const { status } = await ImagePicker.requestCameraPermissionsAsync();
-      if (status !== "granted") {
+      const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+      const mediaStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (cameraStatus.status !== "granted" || mediaStatus.status !== "granted") {
         Alert.alert(
           "Permiso requerido",
-          "Necesitas permitir el acceso a la cámara para crear una publicación"
+          "Necesitas permitir el acceso a la cámara y galería para crear una publicación"
         );
       }
     })();
@@ -49,12 +51,28 @@ export default function CrearPage() {
       });
 
       if (!result.canceled) {
-        const uri = result.assets[0].uri;
-        setImage(uri);
+        setImage(result.assets[0].uri);
       }
     } catch (e) {
       console.error("Error al abrir la cámara:", e);
       Alert.alert("Error", "No se pudo abrir la cámara.");
+    }
+  };
+
+  const openGallery = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    } catch (e) {
+      console.error("Error al abrir la galería:", e);
+      Alert.alert("Error", "No se pudo abrir la galería.");
     }
   };
 
@@ -64,7 +82,6 @@ export default function CrearPage() {
     setLoading(false);
   };
 
- 
   const uploadImageAndSavePost = async () => {
     if (!image && !details.trim()) {
       Alert.alert("Error", "Agrega una imagen o algún detalle para publicar.");
@@ -84,48 +101,37 @@ export default function CrearPage() {
       let downloadURL = "";
 
       if (image) {
-       // procedimiento para subir las imagenes a cloudinary
         const formData = new FormData();
-        
-     
-        formData.append('file', {
-       
-          uri: image, 
-          name: `${uid}_${Date.now()}.jpg`, 
-          type: 'image/jpeg', 
+        formData.append("file", {
+          uri: image,
+          name: `${uid}_${Date.now()}.jpg`,
+          type: "image/jpeg",
         });
-        
-        
-        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-        
-      
+        formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
         const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
-     
         const response = await fetch(uploadUrl, {
-            method: 'POST',
-            body: formData,
+          method: "POST",
+          body: formData,
         });
 
         const data = await response.json();
 
         if (data.error) {
-        
-            throw new Error(`Error en Cloudinary: ${data.error.message}`);
+          throw new Error(`Error en Cloudinary: ${data.error.message}`);
         }
 
-        downloadURL = data.secure_url; 
-        
-       //proceso para el guardado de las publicaciones en firebase 
+        downloadURL = data.secure_url;
       }
-      
+
       const post = {
         IdAutor: uid,
         Detalles: details.trim(),
         FechaCreacion: serverTimestamp(),
         Likes: 0,
         UsuariosLikes: [],
-        ImageUrl: downloadURL, 
+        ImageUrl: downloadURL,
       };
 
       await addDoc(collection(db, "publicaciones"), post);
@@ -134,8 +140,7 @@ export default function CrearPage() {
       resetForm();
     } catch (error) {
       console.error("Error guardando publicación:", error);
-     
-      Alert.alert("Error", error.message || "No se pudo guardar la publicación. Revisa tu conexión y configuración de Cloudinary.");
+      Alert.alert("Error", error.message || "No se pudo guardar la publicación.");
     } finally {
       setLoading(false);
     }
@@ -145,11 +150,15 @@ export default function CrearPage() {
     <View style={styles.container}>
       <Text style={styles.title}>Crear publicación</Text>
 
-   
       {!image ? (
-        <TouchableOpacity style={styles.cameraBtn} onPress={openCamera}>
-          <Text style={styles.btnText}>Abrir cámara</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={[styles.btn, styles.cameraBtn]} onPress={openCamera}>
+            <Text style={styles.btnText}>Tomar Foto</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.btn, styles.cameraBtn]} onPress={openGallery}>
+            <Text style={styles.btnText}>Galería</Text>
+          </TouchableOpacity>
+        </View>
       ) : (
         <>
           <Image source={{ uri: image }} style={styles.preview} />
@@ -167,7 +176,6 @@ export default function CrearPage() {
             <ActivityIndicator size="large" color="#000" />
           ) : (
             <View style={styles.buttonRow}>
-         
               <TouchableOpacity style={[styles.btn, styles.saveBtn]} onPress={uploadImageAndSavePost}>
                 <Text style={styles.btnText}>Guardar</Text>
               </TouchableOpacity>
@@ -207,7 +215,7 @@ const styles = StyleSheet.create({
   preview: {
     marginTop: 20,
     width: "100%",
-    aspectRatio: 4 / 3, 
+    aspectRatio: 4 / 3,
     borderRadius: 10,
   },
   input: {
@@ -240,13 +248,13 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   saveBtn: {
-    backgroundColor: "#28a745", 
+    backgroundColor: "#28a745",
   },
   cancelBtn: {
-    backgroundColor: "#dc3545", 
+    backgroundColor: "#dc3545",
   },
   cameraBtn: {
-    backgroundColor: "#007bff", 
+    backgroundColor: "#007bff",
     padding: 12,
     borderRadius: 8,
     shadowColor: "#000",
@@ -260,3 +268,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 });
+
+export default CrearPage;

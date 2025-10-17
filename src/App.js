@@ -22,6 +22,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import PerfilOtroUsuarioPage from "./pages/PerfilOtroUsuarioPage"; 
 import NotificacionesScreen from "./pages/NotificacionesScreen";
+import EditarPublicacionPage from "./pages/EditarPublicacionPage";
 
 // Placeholders
 const NotificacionesPage = () => (
@@ -107,6 +108,12 @@ const PerfilStack = () => (
         component={PerfilOtroUsuarioPage}
         options={{ title: "Perfil de Usuario" }}
     />
+
+    <Stack.Screen 
+    name="EditarPublicacionPage"
+    component={EditarPublicacionPage}
+    />
+    
   </Stack.Navigator>
 );
 

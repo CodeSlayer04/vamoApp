@@ -90,13 +90,12 @@ const PerfilPage = ({ navigation }) => {
 
       <View style={styles.seccionPublicaciones}>
         <Text style={styles.tituloSeccion}>Publicaciones</Text>
-        <ListaPublicacionesUsuario publicaciones={publicaciones} />
+        <ListaPublicacionesUsuario publicaciones={publicaciones} mostrarBotonEditar={true} />
       </View>
     </ScrollView>
   );
 };
 
-// ... (Tus estilos originales)
 const styles = StyleSheet.create({
   contenedor: { flex: 1, backgroundColor: "#fff" },
   centro: { flex: 1, justifyContent: "center", alignItems: "center" },

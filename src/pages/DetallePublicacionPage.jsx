@@ -38,7 +38,7 @@ const DetallePublicacionPage = ({ route }) => {
   const db = getFirestore(app);
   const auth = getAuth(app);
 
-  // ✅ Cargar usuario actual correctamente
+  //Cargar usuario actual
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUsuarioActual(user || null);
@@ -46,7 +46,7 @@ const DetallePublicacionPage = ({ route }) => {
     return () => unsubscribe();
   }, []);
 
-  // ✅ Cargar publicación
+  //Cargar publicación
   
 useEffect(() => {
   if (!id) return;
@@ -89,7 +89,7 @@ useEffect(() => {
       }
     };
 
-  // ✅ Cargar comentarios con nombre del autor
+  //Cargar comentarios con nombre del autor
   
 const obtenerNombreUsuario = async (uid) => {
   try {
@@ -103,7 +103,6 @@ const obtenerNombreUsuario = async (uid) => {
   }
   return "Usuario";
 };
-
 
 useEffect(() => {
   const comentariosRef = collection(db, "publicaciones", id, "comentarios");
@@ -131,8 +130,6 @@ useEffect(() => {
 
   return () => unsubscribe();
 }, [id]);
-
-
 
   const toggleLike = async () => {
     if (!usuarioActual || !publicacion) return;

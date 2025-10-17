@@ -2,13 +2,18 @@
 import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { getFirestore, doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import app from "../config/firebaseconfig";
-import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 
-const ListaPublicacionesUsuario = ({ publicaciones }) => {
+const ListaPublicacionesUsuario = ({ publicaciones, mostrarBotonEditar = false }) => {
   const navigation = useNavigation();
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -31,13 +36,16 @@ const ListaPublicacionesUsuario = ({ publicaciones }) => {
   return (
     <View style={styles.lista}>
       {publicaciones.map((pub) => {
-        const yaLeDioLike = usuarioActual && pub.UsuariosLikes?.includes(usuarioActual.uid);
+        const yaLeDioLike =
+          usuarioActual && pub.UsuariosLikes?.includes(usuarioActual.uid);
 
         return (
           <TouchableOpacity
             key={pub.id}
             style={styles.card}
-            onPress={() => navigation.navigate("DetallePublicacion", { id: pub.id })}
+            onPress={() =>
+              navigation.navigate("DetallePublicacion", { id: pub.id })
+            }
           >
             <Image source={{ uri: pub.ImageUrl }} style={styles.imagen} />
             <Text style={styles.detalles}>{pub.Detalles}</Text>
@@ -51,6 +59,19 @@ const ListaPublicacionesUsuario = ({ publicaciones }) => {
                 />
               </TouchableOpacity>
               <Text style={styles.likes}>{pub.Likes || 0}</Text>
+
+              {mostrarBotonEditar && (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("EditarPublicacionPage", {
+                      publicacion: pub,
+                    })
+                  }
+                  style={{ marginLeft: 20 }}
+                >
+                  <Text style={{ color: "#4CAF50" }}>Editar</Text>
+                </TouchableOpacity>
+              )}
             </View>
           </TouchableOpacity>
         );
