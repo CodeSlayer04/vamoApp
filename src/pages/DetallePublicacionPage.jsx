@@ -33,6 +33,7 @@ const DetallePublicacionPage = ({ route }) => {
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [loadingComentario, setLoadingComentario] = useState(false);
   const [usuarioActual, setUsuarioActual] = useState(null);
+  const [nombreAutor, setNombreAutor] = useState("Usuario");
 
   const db = getFirestore(app);
   const auth = getAuth(app);
@@ -46,66 +47,92 @@ const DetallePublicacionPage = ({ route }) => {
   }, []);
 
   // ✅ Cargar publicación
-  useEffect(() => {
-    if (!id) return;
+  
+useEffect(() => {
+  if (!id) return;
 
-    const postRef = doc(db, "publicaciones", id);
-    const unsubscribe = onSnapshot(
-      postRef,
-      (docSnap) => {
-        if (docSnap.exists()) {
-          setPublicacion({ id: docSnap.id, ...docSnap.data() });
-        } else {
-          console.warn("No se encontró la publicación con ID:", id);
-          setPublicacion(null);
-        }
-      },
-      (error) => {
-        console.error("Error al obtener la publicación:", error);
+  const postRef = doc(db, "publicaciones", id);
+  const unsubscribe = onSnapshot(
+    postRef,
+    (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        setPublicacion({ id: docSnap.id, ...data });
+
+        // ✅ Buscar nombre del autor
+        obtenerNombreAutor(data.IdAutor);
+      } else {
+        console.warn("No se encontró la publicación con ID:", id);
         setPublicacion(null);
       }
-    );
+    },
+    (error) => {
+      console.error("Error al obtener la publicación:", error);
+      setPublicacion(null);
+    }
+  );
 
-    return () => unsubscribe();
-  }, [id]);
+  return () => unsubscribe();
+}, [id]);
+
+
+  const obtenerNombreAutor = async (uid) => {
+      try {
+        const usuarioRef = doc(db, "usuarios", uid);
+        const usuarioSnap = await getDoc(usuarioRef);
+        if (usuarioSnap.exists()) {
+          const nombre = usuarioSnap.data().nombre || "Usuario";
+          setNombreAutor(nombre);
+        }
+      } catch (error) {
+        setNombreAutor("Usuario");
+      }
+    };
 
   // ✅ Cargar comentarios con nombre del autor
-  useEffect(() => {
-    const comentariosRef = collection(db, "publicaciones", id, "comentarios");
+  
+const obtenerNombreUsuario = async (uid) => {
+  try {
+    const usuarioRef = doc(db, "usuarios", uid);
+    const usuarioSnap = await getDoc(usuarioRef);
+    if (usuarioSnap.exists()) {
+      return usuarioSnap.data().nombre || "Usuario";
+    }
+  } catch (error) {
+    console.warn("Error al obtener nombre del usuario:", error);
+  }
+  return "Usuario";
+};
 
-    const unsubscribe = onSnapshot(comentariosRef, (snapshot) => {
-      const cargarComentarios = async () => {
-        const lista = await Promise.all(
-          snapshot.docs.map(async (doc) => {
-            const data = doc.data();
-            let nombreAutor = "Usuario";
 
-            try {
-              const usuarioRef = doc(db, "usuarios", data.autor);
-              const usuarioSnap = await getDoc(usuarioRef);
-              if (usuarioSnap.exists()) {
-                nombreAutor = usuarioSnap.data().nombre || "Usuario";
-              }
-            } catch (error) {
-              console.warn("Error al obtener nombre del autor:", error);
-            }
+useEffect(() => {
+  const comentariosRef = collection(db, "publicaciones", id, "comentarios");
 
-            return {
-              id: doc.id,
-              texto: data.texto,
-              autor: nombreAutor,
-            };
-          })
-        );
+  const unsubscribe = onSnapshot(comentariosRef, (snapshot) => {
+    const cargarComentarios = async () => {
+      const lista = await Promise.all(
+        snapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          const nombreAutor = await obtenerNombreUsuario(data.autor);
 
-        setComentarios(lista);
-      };
+          return {
+            id: doc.id,
+            texto: data.texto,
+            autor: nombreAutor,
+          };
+        })
+      );
 
-      cargarComentarios();
-    });
+      setComentarios(lista);
+    };
 
-    return () => unsubscribe();
-  }, [id]);
+    cargarComentarios();
+  });
+
+  return () => unsubscribe();
+}, [id]);
+
+
 
   const toggleLike = async () => {
     if (!usuarioActual || !publicacion) return;
@@ -154,7 +181,7 @@ const DetallePublicacionPage = ({ route }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Image source={{ uri: publicacion.ImageUrl }} style={styles.imagen} />
-      <Text style={styles.titulo}>Publicación</Text>
+      <Text style={styles.titulo}>Publicación de {nombreAutor}</Text>
       <Text style={styles.texto}>{publicacion.Detalles}</Text>
 
       <View style={styles.likeContainer}>
@@ -233,6 +260,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   enviarBtnText: { color: "#fff", fontWeight: "bold" },
+  
+  autor: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 10,
+  },
+
 });
 
 export default DetallePublicacionPage;
