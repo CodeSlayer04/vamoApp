@@ -19,7 +19,8 @@ import {
   onSnapshot,
   collection,
   addDoc,
-  serverTimestamp,getDoc
+  serverTimestamp,
+  getDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import app from "../config/firebaseconfig";
@@ -35,9 +36,40 @@ const DetallePublicacionPage = ({ route }) => {
 
   const db = getFirestore(app);
   const auth = getAuth(app);
-  
-  console.log("ID de la publicación recibida:", id);
-  
+
+  // ✅ Cargar usuario actual correctamente
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUsuarioActual(user || null);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // ✅ Cargar publicación
+  useEffect(() => {
+    if (!id) return;
+
+    const postRef = doc(db, "publicaciones", id);
+    const unsubscribe = onSnapshot(
+      postRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          setPublicacion({ id: docSnap.id, ...docSnap.data() });
+        } else {
+          console.warn("No se encontró la publicación con ID:", id);
+          setPublicacion(null);
+        }
+      },
+      (error) => {
+        console.error("Error al obtener la publicación:", error);
+        setPublicacion(null);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [id]);
+
+  // ✅ Cargar comentarios con nombre del autor
   useEffect(() => {
     const comentariosRef = collection(db, "publicaciones", id, "comentarios");
 
@@ -74,29 +106,6 @@ const DetallePublicacionPage = ({ route }) => {
 
     return () => unsubscribe();
   }, [id]);
-
-  
-useEffect(() => {
-  if (!id) return;
-
-  const db = getFirestore(app);
-  const postRef = doc(db, "publicaciones", id);
-
-  const unsubscribe = onSnapshot(postRef, (docSnap) => {
-    if (docSnap.exists()) {
-      setPublicacion({ id: docSnap.id, ...docSnap.data() });
-    } else {
-      console.warn("No se encontró la publicación con ID:", id);
-      setPublicacion(null);
-    }
-  }, (error) => {
-    console.error("Error al obtener la publicación:", error);
-    setPublicacion(null);
-  });
-
-  return () => unsubscribe();
-}, [id]);
-
 
   const toggleLike = async () => {
     if (!usuarioActual || !publicacion) return;
@@ -139,7 +148,8 @@ useEffect(() => {
     );
   }
 
-  const yaLeDioLike = usuarioActual && publicacion.UsuariosLikes?.includes(usuarioActual.uid);
+  const yaLeDioLike =
+    usuarioActual && publicacion.UsuariosLikes?.includes(usuarioActual.uid);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
