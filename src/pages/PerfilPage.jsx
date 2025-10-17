@@ -1,6 +1,6 @@
-// src/pages/PerfilPage.jsx
+// src/pages/PerfilPage.jsx (ACTUALIZAR)
 
-import React from "react";
+import React, { useEffect } from "react"; //Asegúrate de importar 'useEffect'
 import {
   View,
   Text,
@@ -8,20 +8,35 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from "react-native";
+//IMPORTAR useIsFocused de React Navigation
+import { useIsFocused } from "@react-navigation/native";
 
-// 🛑 CLAVE: Importar la instancia de autenticación para obtener el ID real
 import { auth } from "../config/firebaseconfig";
-
+//Asegúrate de que esta importación sea la del hook actualizado
 import { useObtenerPerfilUsuario } from "../hooks/useObtenerPerfilUsuario";
 import EncabezadoPerfil from "../components/EncabezadoPerfil";
 import ListaPublicacionesUsuario from "../components/ListaPublicacionesUsuario";
 
 const PerfilPage = ({ navigation }) => {
-  // Obtener el ID del usuario logueado (uid de Firebase Auth)
+  //USAR el hook useIsFocused
+  const isFocused = useIsFocused();
   const userId = auth.currentUser ? auth.currentUser.uid : null;
 
-  // Manejo de la No-Autenticación
+  //OBTENER la función recargarPerfil del hook
+  const { datosPerfil, estaCargando, error, recargarPerfil } =
+    useObtenerPerfilUsuario(userId);
+
+  //LÓGICA CLAVE: Recargar datos cuando la pantalla se enfoca (al regresar de EditarPerfilPage)
+  useEffect(() => {
+    if (isFocused) {
+      console.log("PerfilPage enfocada. Recargando datos...");
+      recargarPerfil(); // Llama a la función del hook para actualizar
+    }
+  }, [isFocused, recargarPerfil]);
+
+  // Manejo de la No-Autenticación (Tu código original)
   if (!userId) {
+    // ... (Código de manejo de no-autenticación)
     return (
       <View style={styles.centro}>
         <Text style={styles.textoError}>
@@ -37,10 +52,7 @@ const PerfilPage = ({ navigation }) => {
     );
   }
 
-  // Usar el hook con el UID real
-  const { datosPerfil, estaCargando, error } = useObtenerPerfilUsuario(userId);
-
-  // Manejo de la Carga
+  // Manejo de la Carga (Tu código original)
   if (estaCargando) {
     return (
       <View style={styles.centro}>
@@ -50,7 +62,7 @@ const PerfilPage = ({ navigation }) => {
     );
   }
 
-  // Manejo del Error (Incluye "Usuario no encontrado")
+  // Manejo del Error (Tu código original)
   if (error || !datosPerfil) {
     return (
       <View style={styles.centro}>
@@ -78,13 +90,13 @@ const PerfilPage = ({ navigation }) => {
 
       <View style={styles.seccionPublicaciones}>
         <Text style={styles.tituloSeccion}>Publicaciones</Text>
-
         <ListaPublicacionesUsuario publicaciones={publicaciones} />
       </View>
     </ScrollView>
   );
 };
 
+// ... (Tus estilos originales)
 const styles = StyleSheet.create({
   contenedor: { flex: 1, backgroundColor: "#fff" },
   centro: { flex: 1, justifyContent: "center", alignItems: "center" },
@@ -101,7 +113,11 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   errorTexto: { color: "red", fontSize: 18, marginBottom: 10 },
-  errorMensaje: { color: "#31ec08ff", textAlign: "center", paddingHorizontal: 20 },
+  errorMensaje: {
+    color: "#31ec08ff",
+    textAlign: "center",
+    paddingHorizontal: 20,
+  },
   seccionPublicaciones: { padding: 5 },
   tituloSeccion: {
     fontSize: 20,

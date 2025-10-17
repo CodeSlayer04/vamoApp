@@ -1,50 +1,45 @@
 // src/hooks/useObtenerPerfilUsuario.js
 
-import { useState, useEffect } from 'react';
-import { obtenerDatosPerfil } from '../servicios/perfilServicios'; 
+import { useState, useEffect, useCallback } from 'react';
+import { obtenerDatosPerfil } from '../servicios/perfilServicios';
+import { auth } from '../config/firebaseconfig';
 
-
-/**
- * Custom Hook para obtener los datos del perfil de un usuario desde Firebase.
- * @param {string} idUsuario - El ID único del usuario (uid).
- */
-export const useObtenerPerfilUsuario = (idUsuario) => {
+export const useObtenerPerfilUsuario = (targetUserId) => {
+    const userId = targetUserId || (auth.currentUser ? auth.currentUser.uid : null);
     const [datosPerfil, setDatosPerfil] = useState(null);
     const [estaCargando, setEstaCargando] = useState(true);
     const [error, setError] = useState(null);
+    
+    //Estado para forzar la recarga
+    const [refetchTrigger, setRefetchTrigger] = useState(0); 
+    
+    //Función expuesta para que la página pueda llamar a la recarga
+    const recargarPerfil = useCallback(() => {
+        setRefetchTrigger(prev => prev + 1);
+    }, []);
 
     useEffect(() => {
-        // No intentes cargar si no hay ID (ej. usuario no autenticado)
-        if (!idUsuario) {
-            setDatosPerfil(null);
+        if (!userId) {
             setEstaCargando(false);
             return;
         }
 
-        const cargarPerfil = async () => {
+        const fetchDatos = async () => {
             setEstaCargando(true);
             setError(null);
-            
             try {
-                const datosUsuarioReal = await obtenerDatosPerfil(idUsuario);
-
-                if (datosUsuarioReal) {
-                    setDatosPerfil(datosUsuarioReal);
-                } else {
-                    // Esto ocurre si el documento no existe en la colección 'usuarios'
-                    setError("Usuario no encontrado en la base de datos (Colección 'usuarios').");
-                }
+                const data = await obtenerDatosPerfil(userId);
+                setDatosPerfil(data);
             } catch (err) {
-                console.error("Error al cargar perfil:", err);
-                setError("Error al conectar con el servidor. Inténtalo de nuevo.");
+                setError(err);
+                console.error("Error en useObtenerPerfilUsuario:", err);
             } finally {
                 setEstaCargando(false);
             }
         };
 
-        cargarPerfil();
+        fetchDatos();
+    }, [userId, refetchTrigger]); // AGREGAMOS 'refetchTrigger' como dependencia
 
-    }, [idUsuario]); 
-
-    return { datosPerfil, estaCargando, error };
+    return { datosPerfil, estaCargando, error, recargarPerfil }; //EXPORTAMOS la función
 };
