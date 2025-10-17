@@ -1,13 +1,12 @@
-// src/App.js
 import * as React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import { db } from '../src/config/firebaseconfig'; // Asegúrate de que la ruta sea correcta
-import { collection, getDocs } from 'firebase/firestore';
 
+// Importaciones Firebase si las necesitas
+import { db } from './config/firebaseconfig';
 
 // Importaciones de pantallas
 import InicioPage from "./pages/InicioPage";
@@ -17,26 +16,10 @@ import DetallePublicacionPage from "./pages/DetallePublicacionPage";
 import CercaDeMiPage from "./pages/CercaDeMiPage";
 import MapaCategoriaPage from "./pages/MapaCategoriaPage";
 import CrearPage from "./pages/CrearPage";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 // Placeholders
-const HomePage = () => (
-  <Stack.Navigator screenOptions={styles.stackOptions}>
-    <Stack.Screen
-      name="InicioScreen"
-      component={InicioPage}
-      options={{ title: "Inicio" }}
-    />
-  </Stack.Navigator>
-);
-const Crear = () => (
-  <Stack.Navigator screenOptions={styles.stackOptions}>
-    <Stack.Screen
-      name="CrearScreen"
-      component={CrearPage}
-      options={{ title: "Crear publicación" }}
-    />
-  </Stack.Navigator>
-);
 const NotificacionesPage = () => (
   <View style={styles.center}>
     <Text>Notificaciones</Text>
@@ -89,50 +72,64 @@ const PerfilStack = () => (
 );
 
 // Tab principal
+const MainTabs = () => (
+  <Tab.Navigator
+    initialRouteName="Inicio"
+    screenOptions={({ route }) => ({
+      headerShown: false,
+      tabBarActiveTintColor: "#4CAF50",
+      tabBarInactiveTintColor: "gray",
+      tabBarIcon: ({ color, size }) => {
+        let iconName;
+        switch (route.name) {
+          case "Inicio":
+            iconName = "home-outline";
+            break;
+          case "Explorar":
+            iconName = "compass-outline";
+            break;
+          case "Crear":
+            iconName = "add-circle-outline";
+            break;
+          case "Notificaciones":
+            iconName = "notifications-outline";
+            break;
+          case "Mi Cuenta":
+            iconName = "person-outline";
+            break;
+          default:
+            iconName = "ellipse";
+        }
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+    })}
+  >
+    <Tab.Screen name="Inicio" component={InicioPage} />
+    <Tab.Screen name="Explorar" component={ExplorarStack} />
+    <Tab.Screen name="Crear" component={CrearPage} />
+    <Tab.Screen name="Notificaciones" component={NotificacionesPage} />
+    <Tab.Screen
+      name="Mi Cuenta"
+      component={PerfilStack}
+      options={{ title: "Perfil" }}
+    />
+  </Tab.Navigator>
+);
+
+// ✅ Stack de autenticación
+const AuthStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Login" component={Login} />
+    <Stack.Screen name="Register" component={Register} />
+    <Stack.Screen name="MainTabs" component={MainTabs} />
+  </Stack.Navigator>
+);
+
+// App principal
 export default function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        initialRouteName="Inicio"
-        screenOptions={({ route }) => ({
-          headerShown: false,
-          tabBarActiveTintColor: "#4CAF50",
-          tabBarInactiveTintColor: "gray",
-          tabBarIcon: ({ color, size }) => {
-            let iconName;
-            switch (route.name) {
-              case "Inicio":
-                iconName = "home-outline";
-                break;
-              case "Explorar":
-                iconName = "compass-outline";
-                break;
-              case "Crear":
-                iconName = "add-circle-outline";
-                break;
-              case "Notificaciones":
-                iconName = "notifications-outline";
-                break;
-              case "Mi Cuenta":
-                iconName = "person-outline";
-                break;
-              default:
-                iconName = "ellipse";
-            }
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-        })}
-      >
-        <Tab.Screen name="Inicio" component={HomePage} />
-        <Tab.Screen name="Explorar" component={ExplorarStack} />
-        <Tab.Screen name="Crear" component={Crear} />
-        <Tab.Screen name="Notificaciones" component={NotificacionesPage} />
-        <Tab.Screen
-          name="Mi Cuenta"
-          component={PerfilStack}
-          options={{ title: "Perfil" }}
-        />
-      </Tab.Navigator>
+      <AuthStack />
     </NavigationContainer>
   );
 }
