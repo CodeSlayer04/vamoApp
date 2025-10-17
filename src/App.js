@@ -71,7 +71,7 @@ const PerfilStack = () => (
       options={{ title: "Mi Perfil" }}
     />
     <Stack.Screen
-      name="EditarPerfil"
+      name="EditarPerfilPage"
       component={EditarPerfilPage}
       options={{ title: "Editar Información" }}
     />
