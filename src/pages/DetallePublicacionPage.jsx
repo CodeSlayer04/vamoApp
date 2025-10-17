@@ -35,45 +35,67 @@ const DetallePublicacionPage = ({ route }) => {
 
   const db = getFirestore(app);
   const auth = getAuth(app);
+  
+  console.log("ID de la publicación recibida:", id);
+  
+  useEffect(() => {
+    const comentariosRef = collection(db, "publicaciones", id, "comentarios");
+
+    const unsubscribe = onSnapshot(comentariosRef, (snapshot) => {
+      const cargarComentarios = async () => {
+        const lista = await Promise.all(
+          snapshot.docs.map(async (doc) => {
+            const data = doc.data();
+            let nombreAutor = "Usuario";
+
+            try {
+              const usuarioRef = doc(db, "usuarios", data.autor);
+              const usuarioSnap = await getDoc(usuarioRef);
+              if (usuarioSnap.exists()) {
+                nombreAutor = usuarioSnap.data().nombre || "Usuario";
+              }
+            } catch (error) {
+              console.warn("Error al obtener nombre del autor:", error);
+            }
+
+            return {
+              id: doc.id,
+              texto: data.texto,
+              autor: nombreAutor,
+            };
+          })
+        );
+
+        setComentarios(lista);
+      };
+
+      cargarComentarios();
+    });
+
+    return () => unsubscribe();
+  }, [id]);
 
   
 useEffect(() => {
-  const comentariosRef = collection(db, "publicaciones", id, "comentarios");
+  if (!id) return;
 
-  const unsubscribe = onSnapshot(comentariosRef, (snapshot) => {
-    const cargarComentarios = async () => {
-      const lista = await Promise.all(
-        snapshot.docs.map(async (doc) => {
-          const data = doc.data();
-          let nombreAutor = "Usuario";
+  const db = getFirestore(app);
+  const postRef = doc(db, "publicaciones", id);
 
-          try {
-            const usuarioRef = doc(db, "usuarios", data.autor);
-            const usuarioSnap = await getDoc(usuarioRef);
-            if (usuarioSnap.exists()) {
-              nombreAutor = usuarioSnap.data().nombre || "Usuario";
-            }
-          } catch (error) {
-            console.warn("Error al obtener nombre del autor:", error);
-          }
-
-          return {
-            id: doc.id,
-            texto: data.texto,
-            autor: nombreAutor,
-          };
-        })
-      );
-
-      setComentarios(lista);
-    };
-
-    cargarComentarios();
+  const unsubscribe = onSnapshot(postRef, (docSnap) => {
+    if (docSnap.exists()) {
+      setPublicacion({ id: docSnap.id, ...docSnap.data() });
+    } else {
+      console.warn("No se encontró la publicación con ID:", id);
+      setPublicacion(null);
+    }
+  }, (error) => {
+    console.error("Error al obtener la publicación:", error);
+    setPublicacion(null);
   });
 
   return () => unsubscribe();
 }, [id]);
-
 
 
   const toggleLike = async () => {
