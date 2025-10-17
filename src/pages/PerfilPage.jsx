@@ -16,8 +16,8 @@ import EncabezadoPerfil from "../components/EncabezadoPerfil";
 import BotonSeguir from "../components/BotonSeguir";
 import ListaPublicacionesUsuario from "../components/ListaPublicacionesUsuario";
 
-const ID_PERFIL_ACTUAL = "HV220231";
-const ID_USUARIO_LOGUEADO = "HV220231";
+const ID_PERFIL_ACTUAL = "EU220488";
+const ID_USUARIO_LOGUEADO = "EU220488";
 
 const PerfilPage = () => {
   const navigation = useNavigation();

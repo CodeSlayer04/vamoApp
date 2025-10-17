@@ -5,6 +5,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { db } from '../src/config/firebaseconfig'; // Asegúrate de que la ruta sea correcta
+import { collection, getDocs } from 'firebase/firestore';
+
 
 // Importaciones de pantallas
 import InicioPage from "./pages/InicioPage";
