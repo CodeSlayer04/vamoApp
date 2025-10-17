@@ -11,7 +11,7 @@ const EditarPerfilPage = ({ navigation }) => {
       // Redirigir al Login o AuthStack
       navigation.reset({
         index: 0,
-        routes: [{ name: 'AuthStack' }],
+        routes: [{ name: 'Login' }],
       });
     } catch (error) {
       console.error(error);
