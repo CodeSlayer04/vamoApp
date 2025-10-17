@@ -4,41 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import App from '../App';
 
 const Login = ({ navigation }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const loginUser = async () => {
-    if (!username || !password) {
-      Alert.alert('Error', 'Por favor completa todos los campos');
-      return;
-    }
-
-    try {
-      const storedUsers = await AsyncStorage.getItem('usuarios');
-      const users = storedUsers ? JSON.parse(storedUsers) : [];
-
-      const userFound = users.find(
-        (user) => user.username === username && user.password === password
-      );
-
-      if (userFound) {
-        // Guardar sesión actual
-        await AsyncStorage.setItem('currentUser', username);
-        Alert.alert('Éxito', `Bienvenido, ${username}`);
-
-        // Redirigir al menú principal
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'MainTabs' }],
-        });
-      } else {
-        Alert.alert('Error', 'Usuario o contraseña incorrectos');
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'No se pudo iniciar sesión');
-    }
-  };
+ 
 
   return (
     <View style={styles.container}>
@@ -47,16 +13,16 @@ const Login = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="Nombre de usuario"
+        /*
         value={username}
-        onChangeText={setUsername}
+        onChangeText={setUsername}*/
       />
 
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
         secureTextEntry
-        value={password}
-        onChangeText={setPassword}
+      
       />
 
       <Button title="Ingresar" color="#4CAF50" onPress={loginUser} />
