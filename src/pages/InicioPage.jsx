@@ -1,4 +1,5 @@
-// src/pages/PerfilPage.jsx (CÓDIGO ACTUALIZADO PARA NAVEGACIÓN)
+
+// src/pages/InicioPage.jsx
 
 import React from "react";
 import {
@@ -8,26 +9,13 @@ import {
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native"; // <-- 1. IMPORTAR HOOK DE NAVEGACIÓN
-
-// Importamos el Controlador y las Vistas
-import { useObtenerPerfilUsuario } from "../hooks/useObtenerPerfilUsuario";
-import EncabezadoPerfil from "../components/EncabezadoPerfil";
-import BotonSeguir from "../components/BotonSeguir";
+import { useObtenerTodasLasPublicaciones } from "../hooks/useObtenerTodasLasPublicaciones";
 import ListaPublicacionesUsuario from "../components/ListaPublicacionesUsuario";
 
-const ID_PERFIL_ACTUAL = "HV220231";
-const ID_USUARIO_LOGUEADO = "HV220231";
+const InicioPage = () => {
+  const { publicaciones, cargando, error } = useObtenerTodasLasPublicaciones();
 
-const PerfilPage = () => {
-  const { datosPerfil, estaCargando, error } =
-    useObtenerPerfilUsuario(ID_PERFIL_ACTUAL);
-
-  const esPerfilPropio = ID_PERFIL_ACTUAL === ID_USUARIO_LOGUEADO;
-
-  // ... (manejo de estados, carga y error)
-  if (estaCargando || error || !datosPerfil) {
-    // Retornar manejo de estados de carga/error
+  if (cargando) {
     return (
       <View style={styles.contenedorCentrado}>
         <ActivityIndicator size="large" color="#4CAF50" />
@@ -35,10 +23,17 @@ const PerfilPage = () => {
     );
   }
 
-  // 4. Pasar la función de navegación a la Vista
+  if (error) {
+    return (
+      <View style={styles.contenedorCentrado}>
+        <Text style={styles.textoError}>Error al cargar el feed</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.contenedorScroll}>
-      <ListaPublicacionesUsuario publicaciones={datosPerfil.publicaciones} />
+      <ListaPublicacionesUsuario publicaciones={publicaciones} />
     </ScrollView>
   );
 };
@@ -53,4 +48,4 @@ const styles = StyleSheet.create({
   textoError: { color: "red", fontSize: 16 },
 });
 
-export default PerfilPage;
+export default InicioPage;

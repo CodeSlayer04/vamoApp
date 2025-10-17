@@ -75,11 +75,13 @@ const PerfilStack = () => (
       component={EditarPerfilPage}
       options={{ title: "Editar Información" }}
     />
+    
     <Stack.Screen
-      name="DetallePublicacion"
+      name="DetallePublicacionPage"
       component={DetallePublicacionPage}
       options={{ title: "Publicación" }}
     />
+
   </Stack.Navigator>
 );
 
@@ -129,13 +131,20 @@ const MainTabs = () => (
 );
 
 // ✅ Stack de autenticación
+
 const AuthStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="Login" component={Login} />
     <Stack.Screen name="Register" component={Register} />
     <Stack.Screen name="MainTabs" component={MainTabs} />
+    <Stack.Screen
+      name="DetallePublicacion"
+      component={DetallePublicacionPage}
+      options={{ headerShown: true, title: "Publicación" }}
+    />
   </Stack.Navigator>
 );
+
 
 // App principal
 export default function App() {
