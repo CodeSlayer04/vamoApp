@@ -114,7 +114,7 @@ const TarjetaPublicacion = ({ publicacion }) => {
         activeOpacity={0.8}
       >
         <Image
-          source={{ uri: publicacion.imagenUrl }}
+          source={{ uri: publicacion.ImageUrl }}
           style={styles.imagenPublicacion}
         />
 
