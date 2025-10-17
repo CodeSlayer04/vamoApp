@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -11,7 +10,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-
 import app from "../config/firebaseconfig";
 import { getAuth } from "firebase/auth";
 import {
@@ -20,7 +18,9 @@ import {
   addDoc,
   serverTimestamp,
 } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+const CLOUDINARY_CLOUD_NAME = 'dtfmdf4iu'; 
+const CLOUDINARY_UPLOAD_PRESET = 'Vamoapp_upload'; 
 
 export default function CrearPage() {
   const [image, setImage] = useState(null);
@@ -29,6 +29,7 @@ export default function CrearPage() {
 
   useEffect(() => {
     (async () => {
+   
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
       if (status !== "granted") {
         Alert.alert(
@@ -63,6 +64,7 @@ export default function CrearPage() {
     setLoading(false);
   };
 
+ 
   const uploadImageAndSavePost = async () => {
     if (!image && !details.trim()) {
       Alert.alert("Error", "Agrega una imagen o algún detalle para publicar.");
@@ -77,28 +79,53 @@ export default function CrearPage() {
       if (!user) throw new Error("Usuario no autenticado.");
 
       const uid = user.uid;
-      const storage = getStorage(app);
       const db = getFirestore(app);
 
       let downloadURL = "";
 
       if (image) {
-        const response = await fetch(image);
-        const blob = await response.blob();
+       // procedimiento para subir las imagenes a cloudinary
+        const formData = new FormData();
+        
+     
+        formData.append('file', {
+       
+          uri: image, 
+          name: `${uid}_${Date.now()}.jpg`, 
+          type: 'image/jpeg', 
+        });
+        
+        
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        
+      
+        const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
-        const fileName = `posts/${uid}_${Date.now()}`;
-        const storageRef = ref(storage, fileName);
-        await uploadBytes(storageRef, blob);
-        downloadURL = await getDownloadURL(storageRef);
+     
+        const response = await fetch(uploadUrl, {
+            method: 'POST',
+            body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+        
+            throw new Error(`Error en Cloudinary: ${data.error.message}`);
+        }
+
+        downloadURL = data.secure_url; 
+        
+       //proceso para el guardado de las publicaciones en firebase 
       }
-
+      
       const post = {
         IdAutor: uid,
         Detalles: details.trim(),
         FechaCreacion: serverTimestamp(),
         Likes: 0,
         UsuariosLikes: [],
-        ImageUrl: downloadURL,
+        ImageUrl: downloadURL, 
       };
 
       await addDoc(collection(db, "publicaciones"), post);
@@ -107,7 +134,8 @@ export default function CrearPage() {
       resetForm();
     } catch (error) {
       console.error("Error guardando publicación:", error);
-      Alert.alert("Error", error.message || "No se pudo guardar la publicación.");
+     
+      Alert.alert("Error", error.message || "No se pudo guardar la publicación. Revisa tu conexión y configuración de Cloudinary.");
     } finally {
       setLoading(false);
     }
@@ -117,6 +145,7 @@ export default function CrearPage() {
     <View style={styles.container}>
       <Text style={styles.title}>Crear publicación</Text>
 
+   
       {!image ? (
         <TouchableOpacity style={styles.cameraBtn} onPress={openCamera}>
           <Text style={styles.btnText}>Abrir cámara</Text>
@@ -138,6 +167,7 @@ export default function CrearPage() {
             <ActivityIndicator size="large" color="#000" />
           ) : (
             <View style={styles.buttonRow}>
+         
               <TouchableOpacity style={[styles.btn, styles.saveBtn]} onPress={uploadImageAndSavePost}>
                 <Text style={styles.btnText}>Guardar</Text>
               </TouchableOpacity>
@@ -172,11 +202,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     marginBottom: 20,
+    fontWeight: "bold",
   },
   preview: {
     marginTop: 20,
-    width: 300,
-    height: 400,
+    width: "100%",
+    aspectRatio: 4 / 3, 
     borderRadius: 10,
   },
   input: {
@@ -202,17 +233,27 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
     borderRadius: 8,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   saveBtn: {
-    backgroundColor: "#28a745",
+    backgroundColor: "#28a745", 
   },
   cancelBtn: {
-    backgroundColor: "#dc3545",
+    backgroundColor: "#dc3545", 
   },
   cameraBtn: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#007bff", 
     padding: 12,
     borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   btnText: {
     color: "#fff",
