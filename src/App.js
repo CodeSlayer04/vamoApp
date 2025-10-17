@@ -21,6 +21,7 @@ import CrearPage from "./pages/CrearPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import PerfilOtroUsuarioPage from "./pages/PerfilOtroUsuarioPage"; 
+import NotificacionesScreen from "./pages/NotificacionesScreen";
 
 // Placeholders
 const NotificacionesPage = () => (
@@ -145,7 +146,7 @@ const MainTabs = () => (
     <Tab.Screen name="InicioStack" component={HomeStack} options={{ title: "Inicio" }} />
     <Tab.Screen name="Explorar" component={ExplorarStack} />
     <Tab.Screen name="Crear" component={CrearPage} />
-    <Tab.Screen name="Notificaciones" component={NotificacionesPage} />
+    <Tab.Screen name="Notificaciones" component={NotificacionesScreen} />
     <Tab.Screen
       name="Mi Cuenta"
       component={PerfilStack}
