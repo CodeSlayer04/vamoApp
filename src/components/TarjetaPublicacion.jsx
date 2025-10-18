@@ -20,9 +20,6 @@ import {
 import { getAuth } from "firebase/auth";
 import app from "../config/firebaseconfig";
 
-// ------------------------------------------------------------------
-// COMPONENTE SECUNDARIO: Modal de Comentarios
-// ------------------------------------------------------------------
 const ComentariosModal = ({
   visible, onClose, comentarios, nuevoComentario, setNuevoComentario, agregarComentario,
 }) => (
@@ -78,9 +75,6 @@ const ComentariosModal = ({
   </Modal>
 );
 
-// ------------------------------------------------------------------
-// COMPONENTE PRINCIPAL: TarjetaPublicacion
-// ------------------------------------------------------------------
 const TarjetaPublicacion = ({ publicacion }) => {
   const navigation = useNavigation();
   const auth = getAuth(app);

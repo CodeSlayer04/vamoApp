@@ -1,5 +1,3 @@
-// src/components/SugerenciasUsuarios.jsx
-
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { obtenerListaUsuarios } from '../servicios/perfilServicios';
@@ -39,7 +37,7 @@ const SugerenciasUsuarios = () => {
     }
     
     if (usuarios.length === 0) {
-        return null; // No mostrar nada si no hay sugerencias
+        return null; 
     }
 
     const renderItem = ({ item }) => {
@@ -49,8 +47,7 @@ const SugerenciasUsuarios = () => {
         return (
             <TouchableOpacity 
                 style={styles.card}
-                // Aquí navegamos a una ruta genérica de perfil con el ID del usuario.
-                // DEBES CREAR una ruta para 'PerfilOtroUsuarioPage' en tu navegación.
+               
                 onPress={() => navigation.navigate("PerfilOtroUsuarioPage", { userId: item.id })}
             >
                 <Image source={{ uri: fotoUrl }} style={styles.avatar} />

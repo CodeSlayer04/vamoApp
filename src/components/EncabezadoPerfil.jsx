@@ -1,14 +1,12 @@
-// src/components/EncabezadoPerfil.jsx
-
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 /**
  * Componente EncabezadoPerfil
- * @param {object} usuario - Objeto con datos del perfil.
- * @param {function} alEditar - Función a ejecutar al presionar el botón de acción.
- * @param {boolean} esPerfilPropio - Indica si es el perfil del usuario actual.
- * * @param {JSX.Element} CustomButton - 🛑 NUEVO: El componente BotonSeguir para perfiles ajenos.
+ * @param {object} usuario 
+ * @param {function} alEditar 
+ * @param {boolean} esPerfilPropio 
+ * * @param {JSX.Element} CustomButton 
  */
 const EncabezadoPerfil = ({
   usuario,
@@ -16,11 +14,11 @@ const EncabezadoPerfil = ({
   esPerfilPropio = true,
   CustomButton,
 }) => {
-  // 1. Valores por defecto (robustez)
+  
   const nombre = usuario?.nombre || "Usuario Desconocido";
   const biografia =
     usuario?.biografia || "Viajero principiante, en busca de nuevos sitios";
-  // .toLocaleString() para formatear números grandes
+
   const seguidores = usuario?.seguidores?.toLocaleString() || "0";
   const seguidos = usuario?.seguidos?.toLocaleString() || "0";
   const visitados = usuario?.lugaresVisitados?.toLocaleString() || "0";
@@ -28,23 +26,23 @@ const EncabezadoPerfil = ({
     usuario?.fotoPerfil ||
     "https://cdn-icons-png.flaticon.com/512/11789/11789135.png";
 
-  // 2. Lógica del Botón (Editar vs. Seguir)
+
   const textoBoton = esPerfilPropio ? "Editar Perfil" : "Seguir";
   const estiloBoton = esPerfilPropio ? styles.botonEditar : styles.botonSeguir;
 
   return (
     <View style={styles.contenedorPrincipal}>
-      {/* Fila Superior: Foto y Botón de Acción */}
+      
       <View style={styles.filaSuperior}>
         <Image source={{ uri: fotoUrl }} style={styles.imagenPerfil} />
 
         {esPerfilPropio ? (
-          // Si es perfil propio, muestra el botón simple 'Editar Perfil'
+        
           <TouchableOpacity style={styles.botonEditar} onPress={alEditar}>
             <Text style={styles.textoBotonEditar}>Editar Perfil</Text>
           </TouchableOpacity>
         ) : (
-          // 🛑 Si es perfil ajeno, muestra el CustomButton (que DEBE ser <BotonSeguir />)
+        
           CustomButton
         )}
       </View>

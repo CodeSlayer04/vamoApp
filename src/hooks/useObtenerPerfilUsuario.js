@@ -1,5 +1,3 @@
-// src/hooks/useObtenerPerfilUsuario.js
-
 import { useState, useEffect, useCallback } from 'react';
 import { obtenerDatosPerfil } from '../servicios/perfilServicios';
 import { auth } from '../config/firebaseconfig';
@@ -10,10 +8,10 @@ export const useObtenerPerfilUsuario = (targetUserId) => {
     const [estaCargando, setEstaCargando] = useState(true);
     const [error, setError] = useState(null);
     
-    //Estado para forzar la recarga
+  
     const [refetchTrigger, setRefetchTrigger] = useState(0); 
     
-    //Función expuesta para que la página pueda llamar a la recarga
+    
     const recargarPerfil = useCallback(() => {
         setRefetchTrigger(prev => prev + 1);
     }, []);
@@ -39,7 +37,7 @@ export const useObtenerPerfilUsuario = (targetUserId) => {
         };
 
         fetchDatos();
-    }, [userId, refetchTrigger]); // AGREGAMOS 'refetchTrigger' como dependencia
+    }, [userId, refetchTrigger]); 
 
-    return { datosPerfil, estaCargando, error, recargarPerfil }; //EXPORTAMOS la función
+    return { datosPerfil, estaCargando, error, recargarPerfil };
 };

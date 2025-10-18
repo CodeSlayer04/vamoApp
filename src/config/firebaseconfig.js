@@ -1,11 +1,9 @@
-// src/config/firebaseconfig.js
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// Tu configuración de Firebase (usa tus datos reales)
+
 const firebaseConfig = {
     apiKey: "AIzaSyC0sNHdbL5zR4HT-xQPOuTzKn8u-nfp7P4",
     authDomain: "vamoapp-16900.firebaseapp.com",
@@ -18,4 +16,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const storage = getStorage(app); // Necesario para la foto
+export const storage = getStorage(app); 

@@ -8,11 +8,11 @@ import {
   dejarDeSeguirUsuario,
 } from "../servicios/perfilServicios";
 
-// 🛑 ACEPTAMOS LA PROP onFollowToggle
+
 const BotonSeguir = ({ currentUserId, targetUserId, onFollowToggle }) => {
-  // 1. Estado: Si el usuario logueado sigue al objetivo
-  const [isFollowing, setIsFollowing] = useState(false); // Estado: Para deshabilitar el botón y mostrar el spinner durante la carga o la acción
-  const [isLoading, setIsLoading] = useState(true); // 2. Efecto para verificar el estado de seguimiento inicial (al cargar la página)
+ 
+  const [isFollowing, setIsFollowing] = useState(false); 
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     const checkFollowingStatus = async () => {
@@ -30,7 +30,7 @@ const BotonSeguir = ({ currentUserId, targetUserId, onFollowToggle }) => {
       }
     };
     checkFollowingStatus();
-  }, [currentUserId, targetUserId]); // 3. Función que maneja el clic del botón
+  }, [currentUserId, targetUserId]); 
 
   const handleSeguir = async () => {
     if (isLoading) return;
@@ -44,7 +44,7 @@ const BotonSeguir = ({ currentUserId, targetUserId, onFollowToggle }) => {
         await seguirUsuario(currentUserId, targetUserId);
         setIsFollowing(true);
       }
-      // 🛑 LLAMAMOS AL CALLBACK para forzar el refresco de la página padre
+     
       if (onFollowToggle) {
         onFollowToggle();
       }
@@ -58,7 +58,7 @@ const BotonSeguir = ({ currentUserId, targetUserId, onFollowToggle }) => {
 
   if (isLoading) {
     return <ActivityIndicator size="small" color="#4CAF50" />;
-  } // 4. Renderiza el botón
+  } 
 
   return (
     <Button

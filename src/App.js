@@ -5,10 +5,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
-// Importaciones Firebase si las necesitas
+
 import { db } from '../src/config/firebaseconfig';
 
-// Importaciones de pantallas
+
 import InicioPage from "./pages/InicioPage";
 import PerfilPage from "./pages/PerfilPage";
 import EditarPerfilPage from "./pages/EditarPerfilPage";
@@ -24,27 +24,26 @@ import PerfilOtroUsuarioPage from "./pages/PerfilOtroUsuarioPage";
 import NotificacionesScreen from "./pages/NotificacionesScreen";
 import EditarPublicacionPage from "./pages/EditarPublicacionPage";
 
-// Placeholders
+
 const NotificacionesPage = () => (
   <View style={styles.center}>
     <Text>Notificaciones</Text>
   </View>
 );
 
-// Navigators
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const ExplorarStackNav = createNativeStackNavigator();
-const HomeStackNav = createNativeStackNavigator(); // 
-// Envuelve InicioPage para permitir la navegación
+const HomeStackNav = createNativeStackNavigator(); 
+
 const HomeStack = () => (
     <HomeStackNav.Navigator screenOptions={styles.stackOptions}>
         <HomeStackNav.Screen
-            name="InicioTab" // Nombre interno del tab
+            name="InicioTab" 
             component={InicioPage}
             options={{ title: "Inicio" }}
         />
-        {/*Permite ir al perfil de otro usuario desde el feed */}
         <HomeStackNav.Screen
             name="PerfilOtroUsuarioPage"
             component={PerfilOtroUsuarioPage}
@@ -53,7 +52,7 @@ const HomeStack = () => (
     </HomeStackNav.Navigator>
 );
 
-// Stack anidado para Explorar
+
 const ExplorarStack = () => (
   <ExplorarStackNav.Navigator screenOptions={styles.stackOptions}>
     <ExplorarStackNav.Screen
@@ -79,7 +78,7 @@ const ExplorarStack = () => (
   </ExplorarStackNav.Navigator>
 );
 
-// Stack anidado para Perfil
+
 const PerfilStack = () => (
   <Stack.Navigator
     initialRouteName="Perfil"
@@ -102,7 +101,7 @@ const PerfilStack = () => (
       options={{ title: "Publicación" }}
     />
 
-    {/* 🛑 RUTA REGISTRADA: Permite ir al perfil de otro usuario desde el propio perfil */}
+    
     <Stack.Screen
         name="PerfilOtroUsuarioPage"
         component={PerfilOtroUsuarioPage}
@@ -117,7 +116,7 @@ const PerfilStack = () => (
   </Stack.Navigator>
 );
 
-// Tab principal
+
 const MainTabs = () => (
   <Tab.Navigator
     initialRouteName="InicioStack"
@@ -162,7 +161,7 @@ const MainTabs = () => (
   </Tab.Navigator>
 );
 
-// ✅ Stack de autenticación
+
 
 const AuthStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -178,7 +177,7 @@ const AuthStack = () => (
 );
 
 
-// App principal
+
 export default function App() {
   return (
     <NavigationContainer>

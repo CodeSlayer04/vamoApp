@@ -22,11 +22,11 @@ const ComentariosModal = ({ visible, onClose, publicacionId }) => {
   const [isSending, setIsSending] = useState(false);
   const user = auth.currentUser;
 
-  // 1. EFECTO: Suscribe a los comentarios de la subcolección
+ 
   useEffect(() => {
     if (!publicacionId || !visible) return;
 
-    // Ruta: /publicaciones/{publicacionId}/comentarios
+   
     const comentariosRef = collection(db, "publicaciones", publicacionId, "comentarios");
     const q = query(comentariosRef, orderBy("timestamp", "asc"));
 
@@ -43,11 +43,11 @@ const ComentariosModal = ({ visible, onClose, publicacionId }) => {
       setIsLoading(false);
     });
 
-    // Limpia la suscripción al desmontar o cerrar el modal
+  
     return () => unsubscribe();
   }, [publicacionId, visible]);
 
-  // 2. FUNCIÓN: Agregar nuevo comentario a la subcolección
+  
   const agregarComentario = async () => {
     const texto = nuevoComentario.trim();
     if (texto === "" || !user) return;
@@ -57,7 +57,7 @@ const ComentariosModal = ({ visible, onClose, publicacionId }) => {
     try {
       const nuevoComentarioData = {
         autorId: user.uid,
-        autorNombre: user.displayName || "Anónimo", // Usar displayName o un fallback
+        autorNombre: user.displayName || "Anónimo", 
         texto: texto,
         timestamp: serverTimestamp(),
       };
@@ -73,7 +73,7 @@ const ComentariosModal = ({ visible, onClose, publicacionId }) => {
     }
   };
   
-  // Componente interno para renderizar cada comentario
+  
   const ComentarioItem = ({ item }) => (
     <View style={modalStyles.comentarioItem}>
       <Text style={modalStyles.comentarioTexto}>

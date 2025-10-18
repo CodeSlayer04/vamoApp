@@ -1,5 +1,4 @@
 
-// src/hooks/useObtenerTodasLasPublicaciones.js
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import {
